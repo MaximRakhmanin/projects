@@ -22,7 +22,10 @@ use yii\filters\RateLimitInterface;
 class User extends ActiveRecord implements IdentityInterface , RateLimitInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = 1;
+    const STATUS_WAIT = 2;
+    const ROLE_USER = 10;
+    const ROLE_ADMIN = 20;
     /**
      * @inheritdoc
      */
@@ -45,13 +48,32 @@ class User extends ActiveRecord implements IdentityInterface , RateLimitInterfac
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'default', 'value' => self::STATUS_WAIT],
+            ['status', 'in', 'range' => [self::STATUS_WAIT, self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['role','default','value' => self::ROLE_USER],
+            ['role','in','range' => [self::ROLE_USER,self::ROLE_ADMIN]],
+            ['email','trim'],
+            ['email','required'],
+            //['email','email'],
+            ['email', 'unique', ],
+            ['email','match','pattern' => '/[-0-9a-z.+_]+@[-0-9a-z.+_]+.[a-z]{2,4}/i'],
+            ['username','required'],
+            ['username','trim'],
+            ['username','unique']
+
         ];
     }
-    /**
-     * @inheritdoc
-     */
+
+    public function getCustomer(){
+
+        return $this->hasOne(Customer::className(),['user_id' => 'id']);
+    }
+
+    public function getOrders(){
+
+        $this->hasMany(Order::className(),['user_id' => 'id']);
+    }
+
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
@@ -195,4 +217,5 @@ class User extends ActiveRecord implements IdentityInterface , RateLimitInterfac
         \Yii::$app->cache->set($request->getPathInfo() . $request->getMethod() . '_remaining', $allowance);
         \Yii::$app->cache->set($request->getPathInfo() . $request->getMethod() . '_ts', $timestamp);
     }
+
 }

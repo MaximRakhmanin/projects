@@ -2,11 +2,11 @@
 namespace rest\versions\v1\controllers;
 
 use common\models\Post;
+use rest\override\BaseController;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
-use yii\rest\ActiveController;
 
-class PostController extends ActiveController
+class PostController extends BaseController
 {
     public $modelClass = 'common\models\Post';
 
