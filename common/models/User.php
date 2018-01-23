@@ -52,13 +52,11 @@ class User extends ActiveRecord implements IdentityInterface , RateLimitInterfac
             ['status', 'in', 'range' => [self::STATUS_WAIT, self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['role','default','value' => self::ROLE_USER],
             ['role','in','range' => [self::ROLE_USER,self::ROLE_ADMIN]],
-            ['email','trim'],
-            ['email','required'],
+            [['email','username'],'trim'],
+            [['email','username'],'required'],
             //['email','email'],
-            ['email', 'unique', ],
+            ['email', 'unique'],
             ['email','match','pattern' => '/[-0-9a-z.+_]+@[-0-9a-z.+_]+.[a-z]{2,4}/i'],
-            ['username','required'],
-            ['username','trim'],
             ['username','unique']
 
         ];

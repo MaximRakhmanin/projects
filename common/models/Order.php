@@ -33,6 +33,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['user_id','customer_id','total_amount'],'required'],
             [['total_amount', 'user_id'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             ['status','in','range' => [self::STATUS_ACTIVE,self::STATUS_DELETE]],

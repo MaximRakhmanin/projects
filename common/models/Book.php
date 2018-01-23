@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use Yii;
 
 /**
  * This is the model class for table "book".
@@ -15,14 +14,14 @@ use Yii;
  * @property int $condition
  *
  * @property Author[] $authors
- * @property OrderItem[] $orderItems
+ * @property Order_item[] $orderItems
  * @property Publisher[] $publishers
  */
 class Book extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
+    const STATUS_ACTIVE = 1;
+    const STATUS_DELETE = 0;
+
     public static function tableName()
     {
         return 'book';
@@ -34,12 +33,13 @@ class Book extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'price'], 'required'],
-            [['title','price','ISBN','publicationYear'],'trim'],
+            [['title', 'price','category_id'], 'required'],
+            [['title','price','ISBN'],'trim'],
             ['price', 'integer'],
             ['publicationYear', 'default', 'value' => date('Y-m-d')],
             ['title', 'string', 'max' => 100],
-            ['condition','integer'],
+            ['condition','in','range' => [self::STATUS_ACTIVE,self::STATUS_DELETE]],
+            ['condition','default','value' => self::STATUS_ACTIVE],
             ['ISBN','unique'],
             ['ISBN','match','pattern' => '/ISBN:([0-9]|-){13}/i'],
         ];

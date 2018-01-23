@@ -11,7 +11,7 @@ class BookController extends BaseController
 
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['except'] = ['create'];
+        $behaviors['authenticator']['only'] = ['create'];
 
         return $behaviors;
     }

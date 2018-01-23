@@ -4,11 +4,8 @@ namespace rest\versions\v1\controllers;
 use common\models\LoginForm;
 use common\models\User;
 use yii\behaviors\TimestampBehavior;
-use yii\filters\auth\CompositeAuth;
-use yii\rest\ActiveController;
 use yii\rest\Controller;
-use yii\web\HttpException;
-use yii\web\UnauthorizedHttpException;
+
 
 /**
  * Class UserController
@@ -31,6 +28,7 @@ class UserController extends Controller
         } else {
             return $model;
         }
+
     }
 
 
@@ -80,7 +78,6 @@ class UserController extends Controller
             return  'The working time of the new token is 1 hour';
         }
 
-
         $user = User::findOne(['register_key' => $token,'status'=> User::STATUS_WAIT]);
 
         if(isset($user)) {
@@ -120,7 +117,7 @@ class UserController extends Controller
             return $user;
         }
         else{
-
+                return 'Check the correctness of the email';
 
         }
     }

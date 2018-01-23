@@ -2,6 +2,7 @@
 
 namespace rest\versions\v1\controllers;
 
+use common\models\Book;
 use common\models\Customer;
 use common\models\Order;
 use common\models\Order_item;
@@ -26,15 +27,19 @@ class OrderController extends BaseController
 
     public function actionPurchase(){
 
-        $customer = Customer::findOne(['user_id' => \Yii::$app->user->id]);
+        $customer = $this->countSale(\Yii::$app->user->id);
         $total = [];
         foreach(\Yii::$app->request->post('books') as $item){
 
             $order_item = new Order_item();
-            $order_item->setAttributes($item);
+            $book = Book::findOne(['id' => $item['book_id']]);
             $order_item->customer_id = $customer->id;
+            $order_item->price = $book->price;
+            $order_item->quantity = $item['quantity'];
+            $order_item->book_id = $item['book_id'];
             $order_item->save();
-            $total[] = $item['price'];
+            $total[] = $book->price * $item['quantity'];
+
         }
 
         if($customer->status == Customer::STATUS_SALE_ACTIVE){
@@ -42,7 +47,8 @@ class OrderController extends BaseController
             $order = new Order();
             $order->user_id = \Yii::$app->user->id;
             $order->total_amount = array_sum($total);
-            $order->subtotal = $order->total_amount * $customer->sale /100;
+            $order->customer_id = $customer->id;
+            $order->subtotal =$order->total_amount * $customer->sale /100;
             $order->save();
 
             return $order;
@@ -75,11 +81,9 @@ class OrderController extends BaseController
         }
 
     }
+    public function countSale($id){
 
-    public function beforeAction($action)
-    {
-
-        $customer = Customer::findOne(['user_id' => \Yii::$app->user->id]);       //
+        $customer = Customer::findOne(['user_id' => $id]);
         $counter = [];
         foreach($customer->orders as $order){
             $counter[] = $order->total_amount;
@@ -98,7 +102,7 @@ class OrderController extends BaseController
                 $customer->save();
             }
         }
-        return parent::beforeAction($action);
+        return $customer;
     }
 
 }

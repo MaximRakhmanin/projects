@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use Yii;
 
 /**
  * This is the model class for table "customer".
@@ -37,14 +36,16 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['firstName', 'lastName'], 'required'],
+            [['firstName', 'lastName','user_id','streetName','phoneNumber'], 'required'],
+            [['firstName','lastName','streetNumber','province','country','postalCode','phoneNumber'],'trim'],
             [['streetNumber', 'postalCode', 'phoneNumber'], 'integer'],
             [['firstName'], 'string', 'max' => 30],
             [['lastName'], 'string', 'max' => 50,'min' => 3],
             [['streetName', 'province', 'country'], 'string', 'max' => 255,'min' => 4],
             ['status', 'default', 'value' => self::STATUS_SALE_DELETED],
             ['status', 'in', 'range' => [self::STATUS_SALE_ACTIVE, self::STATUS_SALE_DELETED]],
-            ['postalCode','match','pattern' => '/[0-9]{5}'],
+            ['postalCode','match','pattern' => '/[0-9]{5}/'],
+
         ];
     }
 
@@ -90,6 +91,7 @@ class Customer extends \yii\db\ActiveRecord
 
         $fields[] = 'orders';
         $fields[] = 'orderItem';
+
         return $fields;
     }
 }
