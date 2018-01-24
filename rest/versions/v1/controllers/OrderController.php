@@ -24,7 +24,6 @@ class OrderController extends BaseController
         return $behaviors;
     }
 
-
     public function actionPurchase(){
 
         $customer = $this->countSale(\Yii::$app->user->id);
@@ -39,7 +38,6 @@ class OrderController extends BaseController
             $order_item->book_id = $item['book_id'];
             $order_item->save();
             $total[] = $book->price * $item['quantity'];
-
         }
 
         if($customer->status == Customer::STATUS_SALE_ACTIVE){
@@ -79,9 +77,9 @@ class OrderController extends BaseController
         else{
             throw new HttpException(403,'No access to the specified action');
         }
-
     }
-    public function countSale($id){
+
+    public static function countSale($id){
 
         $customer = Customer::findOne(['user_id' => $id]);
         $counter = [];

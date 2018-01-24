@@ -2,14 +2,7 @@
 
 namespace common\models;
 
-use Yii;
 
-/**
- * This is the model class for table "category".
- *
- * @property int $id
- * @property string $description
- */
 class Category extends \yii\db\ActiveRecord
 {
     /**

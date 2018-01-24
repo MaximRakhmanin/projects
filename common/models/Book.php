@@ -2,21 +2,6 @@
 
 namespace common\models;
 
-
-/**
- * This is the model class for table "book".
- *
- * @property int $id
- * @property string $title
- * @property int $ISBN
- * @property string $publicationYear
- * @property int $price
- * @property int $condition
- *
- * @property Author[] $authors
- * @property Order_item[] $orderItems
- * @property Publisher[] $publishers
- */
 class Book extends \yii\db\ActiveRecord
 {
     const STATUS_ACTIVE = 1;

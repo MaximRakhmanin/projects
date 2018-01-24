@@ -67,7 +67,8 @@ return [
                 'POST v1/customer/addition' => 'v1/customer/addition',
                 'POST v1/order/purchase' => 'v1/order/purchase',
                 'POST v1/order/update-status' => 'v1/order/update-status',
-                'POST v1/admin/discount' => 'v1/admin/discount',
+                'POST v1/customer/discount' => 'v1/customer/discount',
+
             ],
         ],
     ],
