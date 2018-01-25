@@ -33,7 +33,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id','customer_id','total_amount'],'required'],
+            [['user_id','customer_id'],'required'],
             [['total_amount', 'user_id'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             ['status','in','range' => [self::STATUS_ACTIVE,self::STATUS_DELETE]],
@@ -63,6 +63,19 @@ class Order extends \yii\db\ActiveRecord
     public function getCustomer(){
 
         return $this->hasOne(Customer::className(),['id' => 'customer_id']);
+    }
+
+    public function getItems(){
+
+        return $this->hasMany(Order_item::className(),['order_id' => 'id']);
+    }
+
+    public function fields()
+    {
+        $fields =  parent::fields();
+        $fields[] = 'items';
+
+        return $fields;
     }
 
 

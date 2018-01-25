@@ -28,6 +28,12 @@ class OrderController extends BaseController
 
         $customer = $this->countSale(\Yii::$app->user->id);
         $total = [];
+
+        $order = new Order();
+        $order->customer_id = $customer->id;
+        $order->user_id = \Yii::$app->user->id;
+        $order->save();
+
         foreach(\Yii::$app->request->post('books') as $item){
 
             $order_item = new Order_item();
@@ -36,31 +42,28 @@ class OrderController extends BaseController
             $order_item->price = $book->price;
             $order_item->quantity = $item['quantity'];
             $order_item->book_id = $item['book_id'];
+            $order_item->order_id = $order->id;
             $order_item->save();
             $total[] = $book->price * $item['quantity'];
         }
 
         if($customer->status == Customer::STATUS_SALE_ACTIVE){
 
-            $order = new Order();
-            $order->user_id = \Yii::$app->user->id;
             $order->total_amount = array_sum($total);
-            $order->customer_id = $customer->id;
-            $order->subtotal =$order->total_amount * $customer->sale /100;
+            $order->subtotal = $order->total_amount * $customer->sale / 100;
             $order->save();
 
             return $order;
         }
         else {
-            $order = new Order();
-            $order->user_id = \Yii::$app->user->id;
+
             $order->total_amount = array_sum($total);
             $order->subtotal = $order->total_amount;
-            $order->customer_id = $customer->id;
             $order->save();
 
             return $order;
         }
+
     }
     public function actionUpdateStatus(){
 

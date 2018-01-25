@@ -49,6 +49,16 @@ class Order_item extends \yii\db\ActiveRecord
             'book_id' => 'Book ID',
         ];
     }
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert)){
+
+
+
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -61,6 +71,11 @@ class Order_item extends \yii\db\ActiveRecord
     public function getCustomer(){
 
         return $this->hasOne(Customer::className(),['id' => 'customer_id']);
+    }
+
+    public function getOrder(){
+
+        return $this->hasOne(Order::className(),['order_id' => 'id']);
     }
 
 
