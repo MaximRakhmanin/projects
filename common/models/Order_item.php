@@ -2,18 +2,6 @@
 
 namespace common\models;
 
-use Yii;
-
-/**
- * This is the model class for table "order_item".
- *
- * @property int $id
- * @property int $quantity
- * @property string $price
- * @property int $book_id
- *
- * @property Book $book
- */
 class Order_item extends \yii\db\ActiveRecord
 {
     /**
@@ -48,16 +36,6 @@ class Order_item extends \yii\db\ActiveRecord
             'price' => 'Price',
             'book_id' => 'Book ID',
         ];
-    }
-    public function beforeSave($insert)
-    {
-        if(parent::beforeSave($insert)){
-
-
-
-            return true;
-        }
-        return false;
     }
 
     /**

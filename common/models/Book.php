@@ -17,6 +17,7 @@ class Book extends \yii\db\ActiveRecord
      */
     public function rules()
     {
+
         return [
             [['title', 'price','category_id'], 'required'],
             [['title','price','ISBN'],'trim'],
@@ -27,6 +28,9 @@ class Book extends \yii\db\ActiveRecord
             ['condition','default','value' => self::STATUS_ACTIVE],
             ['ISBN','unique'],
             ['ISBN','match','pattern' => '/ISBN:([0-9]|-){13}/i'],
+            ['discount','integer'],
+            ['status','in','range' => [self::STATUS_ACTIVE,self::STATUS_DELETE]],
+            ['status','default', 'value' => self::STATUS_DELETE],
         ];
     }
 

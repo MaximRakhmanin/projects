@@ -50,7 +50,8 @@ class OrderController extends BaseController
         if($customer->status == Customer::STATUS_SALE_ACTIVE){
 
             $order->total_amount = array_sum($total);
-            $order->subtotal = $order->total_amount * $customer->sale / 100;
+            $sale = $order->total_amount * $customer->sale / 100;
+            $order->subtotal = $order->total_amount - $sale;
             $order->save();
 
             return $order;
