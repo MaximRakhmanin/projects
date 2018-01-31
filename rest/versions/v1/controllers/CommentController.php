@@ -1,8 +1,9 @@
 <?php
 namespace rest\versions\v1\controllers;
 
+use common\models\Comment;
 use rest\override\BaseController;
-use yii\filters\auth\QueryParamAuth;
+
 
 
 class CommentController extends BaseController
@@ -12,9 +13,19 @@ class CommentController extends BaseController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::className(),
-        ];
+
+        $behaviors['authenticator']['except'] = [];
+
         return $behaviors;
     }
+
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        $model = Comment::findOne(['user_id' => \Yii::$app->user->id]);
+
+        var_dump($model);
+        die;
+
+    }
+
 }

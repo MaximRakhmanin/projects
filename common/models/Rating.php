@@ -3,24 +3,14 @@
 namespace common\models;
 
 
-/**
- * This is the model class for table "comment".
- *
- * @property integer $id
- * @property string $content
- * @property integer $book_id
- * @property string $created_at
- *
- * @property Book $book
- */
-class Comment extends \yii\db\ActiveRecord
+class Rating extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'comment';
+        return 'rating';
     }
 
     /**
@@ -29,11 +19,7 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['book_id','user_id','content'], 'required'],
-            [['book_id'], 'integer'],
-            [['created_at'], 'safe'],
-            [['content'], 'string', 'max' => 255],
-
+            [['user_id', 'book_id', 'rating'], 'integer']
         ];
     }
 
@@ -44,9 +30,9 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'content' => 'Content',
+            'user_id' => 'User ID',
             'book_id' => 'Book ID',
-            'created_at' => 'Created At',
+            'rating' => 'Rating',
         ];
     }
 
@@ -58,8 +44,18 @@ class Comment extends \yii\db\ActiveRecord
         return $this->hasOne(Book::className(), ['id' => 'book_id']);
     }
 
-    public function getUser(){
-
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function beforeValidate()
+    {
+        $this->user_id = \Yii::$app->user->id;
+
+        return parent::beforeValidate();
     }
 }

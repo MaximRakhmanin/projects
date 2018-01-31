@@ -53,7 +53,7 @@ return [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/post', 'v1/comment', 'v2/post','v1/category','v1/customer','v1/order','v1/order_item','v1/publisher','v1/author','v1/user']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/post', 'v1/comment', 'v2/post','v1/category','v1/customer','v1/order','v1/order_item','v1/publisher','v1/author','v1/book','v1/user','v1/rating']],
                 'OPTIONS v1/user/login' => 'v1/user/login',
                 'OPTIONS v2/user/login' => 'v2/user/login',
                 'OPTIONS v1/user/register' => 'v1/user/register',
@@ -69,7 +69,8 @@ return [
                 'POST v1/order/update-status' => 'v1/order/update-status',
                 'POST v1/customer/discount' => 'v1/customer/discount',
                 'POST v1/book/activity-discount' => 'v1/book/activity-discount',
-                'POST v1/book/create-book' => 'v1/book/create-book',
+
+
 
             ],
         ],

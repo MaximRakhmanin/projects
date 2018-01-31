@@ -60,7 +60,7 @@ class Book extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrder_Items()
+    public function getOrderItems()
     {
         return $this->hasMany(Order_Item::className(), ['book_id' => 'id']);
     }
@@ -78,5 +78,22 @@ class Book extends \yii\db\ActiveRecord
 
         return $this->hasOne(Category::className(),['id' => 'category_id']);
     }
+
+    public function getComments(){
+
+        return $this->hasMany(Comment::className(), ['book_id' => 'id']);
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        $fields[] = 'publishers';
+        $fields[] = 'comments';
+        $fields[] = 'authors';
+
+        return $fields;
+
+     }
 
 }

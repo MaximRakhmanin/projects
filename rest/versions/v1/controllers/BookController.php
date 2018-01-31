@@ -4,6 +4,7 @@ namespace rest\versions\v1\controllers;
 use common\models\Book;
 use rest\override\BaseController;
 use common\models\User;
+use yii\data\ActiveDataProvider;
 
 class BookController extends BaseController
 {
@@ -17,8 +18,32 @@ class BookController extends BaseController
 
         return $behaviors;
     }
+    public function actions()
+    {
+        $actions = parent::actions();
 
-    public function actionCreateBook(){
+        $actions['index']['prepareDataProvider'] = [$this,'prepareDataProvider'];
+
+        unset($actions['create']);
+
+        return $actions;
+    }
+
+    public function prepareDataProvider(){
+
+        $model = new Book();
+        $query = Book::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
+
+        $model->setAttribute('title', @$_GET['title']);
+        $query->andFilterWhere(['like', 'title', $model->title]);
+
+        return $dataProvider;
+
+    }
+
+
+    public function actionCreate(){
 
         $user = \Yii::$app->user->identity;
 
@@ -35,6 +60,7 @@ class BookController extends BaseController
                 $out = date('Y-m-d', $time);
                 $book->date = $out;
                 $book->status = Book::STATUS_ACTIVE;
+                $book->discount_price = $book->price - ($book->price * $book->discount / 100);
                 $book->save();
 
                 $this->timer($book->id);
@@ -72,15 +98,7 @@ class BookController extends BaseController
                     $book->date = $out;
                     $book->save();
                 }
-//
-                if(date('Y-m-d') === $book->date ){
 
-                    $book->status = Book::STATUS_DELETE;
-                    $book->discount = null;
-                    $book->save();
-
-                    return $book;
-                }
             }
         }
             return $book;

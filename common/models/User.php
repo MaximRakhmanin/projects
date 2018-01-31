@@ -72,6 +72,22 @@ class User extends ActiveRecord implements IdentityInterface , RateLimitInterfac
         $this->hasMany(Order::className(),['user_id' => 'id']);
     }
 
+    public function getComments(){
+
+        return $this->hasMany(Comment::className(), ['user_id' => 'id']);
+    }
+
+
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        $fields[] = 'orders';
+        $fields[] = 'comments';
+
+        return $fields;
+    }
+
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);

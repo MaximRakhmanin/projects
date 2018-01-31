@@ -38,13 +38,27 @@ class OrderController extends BaseController
 
             $order_item = new Order_item();
             $book = Book::findOne(['id' => $item['book_id']]);
+
+            if(date('Y-m-d') === $book->date ) {
+
+                $book->status = Book::STATUS_DELETE;
+                $book->save();
+            }
             $order_item->customer_id = $customer->id;
             $order_item->price = $book->price;
             $order_item->quantity = $item['quantity'];
             $order_item->book_id = $item['book_id'];
             $order_item->order_id = $order->id;
             $order_item->save();
-            $total[] = $book->price * $item['quantity'];
+            if($book->status == Book::STATUS_ACTIVE){
+
+                $order_item->price = $book->discount_price;
+                $order_item->save();
+                $total[] = $book->discount_price * $item['quantity'];
+            }
+            else {
+                $total[] = $book->price * $item['quantity'];
+            }
         }
 
         if($customer->status == Customer::STATUS_SALE_ACTIVE){
